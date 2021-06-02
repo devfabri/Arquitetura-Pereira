@@ -1,5 +1,4 @@
 import sqlite3
-from altera_CF import Altera_CF
 from altera_projeto import Altera_Projeto
 from bd import Novo_BD
 from insere_NovoCF import Novo_CF

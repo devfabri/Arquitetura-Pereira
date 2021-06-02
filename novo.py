@@ -9,7 +9,7 @@ class Novo:
 
         # criando a tabela (schema)
         cursor.execute("""
-            CREATE IF NOT EXISTS TABLE clientes (
+            CREATE TABLE IF NOT EXISTS clientes (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 tipo INTEGER NOT NULL,
                 metragem INTEGER NOT NULL,
@@ -40,11 +40,11 @@ class Novo:
 
         # criando a tabela (schema)
         cursor.execute("""
-            CREATE IF NOT EXISTS TABLE clientes (
+            CREATE TABLE IF NOT EXISTS clientes (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 nomeCliente VARCHAR(40) NOT NULL,
                 endereco VARCHAR(40) NOT NULL,
-                telefone VARCHAR(40) NOT NULL
+                telefone VARCHAR(40) NOT NULL,
                 email VARCHAR(40) NOT NULL
 
             );

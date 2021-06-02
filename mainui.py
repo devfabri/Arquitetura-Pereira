@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 from tkcalendar import Calendar, DateEntry
-import math
+
 from main import *
 
 root = Tk()
@@ -118,7 +118,7 @@ class Application():
         self.val_pago_decoracao = self.pago_decoracao.get()
         self.val_parcelado = self.vp_entry["text"]
 
-        Novo_Projeto.insere_Novo_Projeto(self, self.tipo_proj, self.met1, self.met2, self.met3, self.data_finalizacao, Etapa, self.nome, self.data_contratacao, self.telefone, self.valor_total, self.valor_pago, self.val_parcelado, self.vencimento_fatura, self.quantidade_parcelas, self.val_pago_materiais, self.val_pago_maodeobra, self.val_pago_decoracao)
+        #Novo_Projeto.insere_Novo_Projeto(self, self.tipo_proj, self.met1, self.met2, self.met3, self.data_finalizacao, Etapa, self.nome, self.data_contratacao, self.telefone, self.valor_total, self.valor_pago, self.val_parcelado, self.vencimento_fatura, self.quantidade_parcelas, self.val_pago_materiais, self.val_pago_maodeobra, self.val_pago_decoracao)
 
 
     def select_projetos(self):
