@@ -1,4 +1,3 @@
-import sqlite3
 from altera_projeto import Altera_Projeto
 from bd import Novo_BD
 from insere_NovoCF import Novo_CF
@@ -8,20 +7,7 @@ from ler_projeto import Ler_Projeto
 from novo import Novo
 
 def main():
-    Novo_BD.cria_BD()
-    Novo.cria()
-
-    if operacao == 1:
-        Novo_Projeto.insere_Novo_Projeto(Tipo, Metragem, DataConclusao, Etapa, NomeCliente, DataContratacao, Telefone, VT, VA, VP, DP, QP, VM, VMO)
-        Novo_CF.insere_Novo_CF(NomeCliente, Endereco, Telefone, Email)
-    else:
-        Ler_Projeto.leia_proj()
-        Ler_CF.leia_cf()
-        if DesejaProj == 1:
-            Altera_Projeto.altera_proj(id_cliente, Tipo, Metragem, DataConclusao, Etapa, NomeCliente, DataContratacao, Telefone, VT, VA, VP, DP, QP, VM, VMO)
-            Altera_CF.altera_cf(id_cliente, NomeCliente, Endereco, Telefone, Email)                
-        else:
-            Altera_CF.altera_cf(id_cliente, NomeCliente, Endereco, Telefone, Email)                
+    pass
 
 """
     Side, tem que trocar umas labels: 
