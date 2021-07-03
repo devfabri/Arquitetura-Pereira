@@ -6,7 +6,7 @@ class Ler_Projeto:
 
         # lendo os dados
         cursor.execute("""
-        SELECT * FROM clientes;
+        SELECT * FROM projeto;
         """)
 
         for linha in cursor.fetchall():

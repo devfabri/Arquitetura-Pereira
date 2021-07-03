@@ -1,12 +1,12 @@
 import sqlite3
-class Ler_CF:
-    def leia_cf(self):
-        conn = sqlite3.connect('cliente.db')
+class Ler_Gastos:
+    def leia_gastos(self):
+        conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
         # lendo os dados
         cursor.execute("""
-        SELECT * FROM cliente;
+        SELECT * FROM financeiro;
         """)
 
         for linha in cursor.fetchall():

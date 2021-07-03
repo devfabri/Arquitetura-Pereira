@@ -6,3 +6,6 @@ class Novo_BD:
 
         conn = sqlite3.connect('cliente.db')
         conn.close()
+
+        conn = sqlite3.connect('financeiro.db')
+        conn.close()

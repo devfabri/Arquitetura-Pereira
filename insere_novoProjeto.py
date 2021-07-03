@@ -1,19 +1,23 @@
+from Insere_NovoGasto import InsereFinancas
 import sqlite3
 
 class Novo_Projeto:
-    def insere_Novo_Projeto(self, id_cliente, Tipo, Metragem, DataConclusao, Etapa, NomeCliente, DataContratacao, Telefone, VT, VA, VP, DP, QP, VM, VMO):
+    def insere_Novo_Projeto(self, Tipo, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
 
         conn = sqlite3.connect('projeto.db')
         cursor = conn.cursor()
 
         # inserindo dados na tabela
         cursor.execute("""
-        INSERT INTO clientes (tipo, metragem, dataConclusao, etapa, nomeCliente, dataContratacao, telefone, vt, va, vp, dp, qp, vm, vmo)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (Tipo, Metragem, DataConclusao, Etapa, NomeCliente, DataContratacao, Telefone, VT, VA, VP, DP, QP, VM, VMO))
+        INSERT INTO projeto (tipo, metragem, valorMetro, dataConclusao, dataContratacao, valorTotal, valorRecebido, valorAReceber, quantidadeParcelas, dataParcela)
+        VALUES (?,?,?,?,?,?,?,?,?,?)
+        """, (Tipo, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela))
 
         conn.commit()
 
         conn.close()
 
         print('Dados inseridos com sucesso.')
+        
+        InsereFinancas.Atualiza_Valortotal(ValorTotal)
+        InsereFinancas.Atualiza_ValorRecebido(ValorRecebido)

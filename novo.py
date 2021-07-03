@@ -9,22 +9,18 @@ class Novo:
 
         # criando a tabela (schema)
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS clientes (
+            CREATE TABLE IF NOT EXISTS projeto (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                tipo INTEGER NOT NULL,
+                tipo VARCHAR(40) NOT NULL,
                 metragem INTEGER NOT NULL,
+                valorMetro INTEGER NOT NULL,
                 dataConclusao DATE NOT NULL,
-                etapa VARCHAR(40) NOT NULL,
-                nomeCliente VARCHAR(40) NOT NULL,
                 dataContratacao DATE NOT NULL,
-                telefone VARCHAR(11) NOT NULL,
-                vt INTEGER NOT NULL,
-                va INTEGER NOT NULL,
-                vp INTEGER NOT NULL,
-                dp INTEGER NOT NULL,
-                qp INTEGER NOT NULL,
-                vm INTEGER NOT NULL,
-                vmo VARCHAR(400) NOT NULL
+                valorTotal INTEGER NOT NULL,
+                valorRecebido INTEGER NOT NULL,
+                valorAReceber INTEGER NOT NULL,
+                quantidadeParcelas INTEGER NOT NULL,
+                dataParcela DATE NOT NULL
             );
             """)
 
@@ -40,13 +36,42 @@ class Novo:
 
         # criando a tabela (schema)
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS clientes (
+            CREATE TABLE IF NOT EXISTS cliente (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 nomeCliente VARCHAR(40) NOT NULL,
-                endereco VARCHAR(40) NOT NULL,
-                telefone VARCHAR(40) NOT NULL,
-                email VARCHAR(40) NOT NULL
+                nomeCliente2 VARCHAR(40),
+                telefone VARCHAR(15) NOT NULL,
+                telefone2 VARCHAR(15),
+                email VARCHAR(40) NOT NULL,
+                email2 VARCHAR(40),
+                endereco VARCHAR(100) NOT NULL,
+                tipoDeObra VARCHAR(50) NOT NULL
+            );
+            """)
 
+        print('Tabela criada com sucesso.')
+        # desconectando...
+        conn.close()
+
+        # conectando...
+        conn = sqlite3.connect('financeiro.db')
+        # definindo um cursor
+        cursor = conn.cursor()
+
+        # criando a tabela (schema)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS financeiro (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                valorTotal INTEGER NOT NULL,
+                valorAReceber INTEGER NOT NULL,
+                valorDesenhista INTEGER NOT NULL,
+                valorImpostos INTEGER NOT NULL,
+                valorContabilidade INTEGER NOT NULL,
+                valorFuncionarios INTEGER NOT NULL,
+                valorPapelaria INTEGER NOT NULL,
+                valorFaxina INTEGER NOT NULL,
+                outrosGastos INTEGER NOT NULL,                
+                detalhesGastos VARCHAR(4000)
             );
             """)
 
