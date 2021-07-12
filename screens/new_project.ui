@@ -334,6 +334,9 @@ QPushButton:pressed {
             <property name="text">
              <string>Físico</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -521,6 +524,9 @@ QPushButton:pressed {
            <widget class="QRadioButton" name="obratype_residencial">
             <property name="text">
              <string>Residencial</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -811,7 +817,7 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="dateEdit">
+           <widget class="QDateEdit" name="data_vencimento">
             <property name="wrapping">
              <bool>false</bool>
             </property>
