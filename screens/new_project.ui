@@ -441,13 +441,13 @@ QPushButton:pressed {
       <property name="minimumSize">
        <size>
         <width>900</width>
-        <height>100</height>
+        <height>150</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>800</width>
-        <height>170</height>
+        <height>180</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -463,6 +463,9 @@ QPushButton:pressed {
        <number>0</number>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="bottomMargin">
+        <number>10</number>
+       </property>
        <item alignment="Qt::AlignTop">
         <widget class="QFrame" name="frame_2">
          <property name="minimumSize">
@@ -582,13 +585,28 @@ QPushButton:pressed {
             </property>
            </widget>
           </item>
-          <item alignment="Qt::AlignLeft">
-           <widget class="QLineEdit" name="valor_m2">
+          <item>
+           <widget class="QDoubleSpinBox" name="valor_m2">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>35</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
               <width>100</width>
-              <height>16777215</height>
+              <height>100</height>
              </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="maximum">
+             <double>9999999999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -617,6 +635,12 @@ QPushButton:pressed {
           </item>
           <item>
            <widget class="QLineEdit" name="tamanho_obra">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>35</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
               <width>50</width>
@@ -647,6 +671,12 @@ QPushButton:pressed {
           </item>
           <item>
            <widget class="QDateEdit" name="data_contratacao">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -696,6 +726,12 @@ QPushButton:pressed {
           </item>
           <item>
            <widget class="QDateEdit" name="data_finalizacao">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(255, 255, 255);r</string>
             </property>
@@ -725,7 +761,7 @@ QPushButton:pressed {
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>35</height>
+           <height>40</height>
           </size>
          </property>
          <property name="frameShape">
@@ -755,14 +791,21 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="valor_areceber">
-            <property name="font">
-             <font>
-              <pointsize>11</pointsize>
-             </font>
+           <widget class="QDoubleSpinBox" name="valor_areceber">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>35</height>
+             </size>
             </property>
-            <property name="inputMask">
-             <string/>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="maximum">
+             <double>9999999999999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -787,12 +830,18 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="qnt_parcelas">
-            <property name="maximumSize">
+           <widget class="QSpinBox" name="qnt_parcelas">
+            <property name="minimumSize">
              <size>
               <width>40</width>
-              <height>16777215</height>
+              <height>35</height>
              </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="maximum">
+             <number>500</number>
             </property>
            </widget>
           </item>
@@ -818,6 +867,12 @@ QPushButton:pressed {
           </item>
           <item>
            <widget class="QDateEdit" name="data_vencimento">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="wrapping">
              <bool>false</bool>
             </property>
@@ -856,12 +911,21 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="valor_obra">
-            <property name="maximumSize">
+           <widget class="QDoubleSpinBox" name="valor_obra">
+            <property name="minimumSize">
              <size>
-              <width>100</width>
-              <height>16777215</height>
+              <width>0</width>
+              <height>35</height>
              </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="maximum">
+             <double>99999999999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -886,12 +950,21 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="valor_recebido">
-            <property name="maximumSize">
+           <widget class="QDoubleSpinBox" name="valor_recebido">
+            <property name="minimumSize">
              <size>
-              <width>100</width>
-              <height>16777215</height>
+              <width>0</width>
+              <height>35</height>
              </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="maximum">
+             <double>999999999999.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -906,7 +979,7 @@ QPushButton:pressed {
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>130</height>
+        <height>110</height>
        </size>
       </property>
       <property name="frameShape">

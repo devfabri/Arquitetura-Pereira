@@ -1,3 +1,4 @@
+import sqlite3
 class InsereFinancas:
     def Atualiza_Valortotal(self, ValorTotal):
 

@@ -1,7 +1,7 @@
 from Insere_NovoGasto import InsereFinancas
 import sqlite3
 
-class Novo_Projeto:
+class Novo_Projeto(InsereFinancas):
     def insere_Novo_Projeto(self, Tipo, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
 
         conn = sqlite3.connect('projeto.db')
@@ -18,6 +18,6 @@ class Novo_Projeto:
         conn.close()
 
         print('Dados inseridos com sucesso.')
-        
-        InsereFinancas.Atualiza_Valortotal(ValorTotal)
-        InsereFinancas.Atualiza_ValorRecebido(ValorRecebido)
+        '''
+        self.Atualiza_Valortotal(ValorTotal)
+        self.Atualiza_ValorRecebido(ValorRecebido)'''

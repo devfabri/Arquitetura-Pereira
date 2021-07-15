@@ -10,6 +10,6 @@ class Ler_Projeto:
         """)
 
         for linha in cursor.fetchall():
-            print(linha)
+            return(linha)
 
         conn.close()
