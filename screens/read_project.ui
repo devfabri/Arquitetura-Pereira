@@ -118,13 +118,13 @@ QPushButton:pressed {
      <widget class="QTableWidget" name="tableWidget">
       <property name="minimumSize">
        <size>
-        <width>900</width>
+        <width>1000</width>
         <height>300</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>900</width>
+        <width>1000</width>
         <height>300</height>
        </size>
       </property>
@@ -156,6 +156,9 @@ QPushButton:pressed {
        <bool>true</bool>
       </attribute>
       <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
       <attribute name="verticalHeaderStretchLastSection">
@@ -204,6 +207,21 @@ QPushButton:pressed {
       <column>
        <property name="text">
         <string>Valor Total</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string/>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string/>
        </property>
       </column>
      </widget>

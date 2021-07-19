@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 from PyQt5 import QtGui, uic, QtWidgets
 from PyQt5.QtCore import QDate, Qt
 
@@ -17,7 +18,9 @@ class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
 
     def toReadScreen(self):
         stack.setCurrentIndex(2)
-        
+    
+    def toReadDebts(self):
+        stack.setCurrentIndex(3)
 
     def __init__(self):
         super(MainMenu, self).__init__()
@@ -26,6 +29,7 @@ class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
         self.cria()
         self.btn_new.clicked.connect(self.toInsertScreen)
         self.btn_read.clicked.connect(self.toReadScreen)
+        self.btn_financeiro.clicked.connect(self.toReadDebts)
 
 class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
     def toMenu(self):
@@ -77,10 +81,11 @@ class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
         uic.loadUi("screens/new_project.ui", self)
         self.voltar.clicked.connect(self.toMenu)
         self.inserirProjeto.clicked.connect(self.collectData)
+        self.data_vencimento.setDate(datetime.datetime.now().date())
+        self.data_contratacao.setDate(datetime.datetime.now().date())
+        self.data_finalizacao.setDate(datetime.datetime.now().date())
 
 class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
-    def backToMenu(self):
-        stack.setCurrentIndex(0)
     def __init__(self):
         super(ReadProject, self).__init__()
         uic.loadUi("screens/read_project.ui", self)
@@ -93,12 +98,42 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.setRowCount(50)
         self.btn_voltar.clicked.connect(self.backToMenu)
         self.btn_reload.clicked.connect(self.loadData)
+        
         #functions
         self.loadData()
         '''self.loadJobData()'''
+    
+    def backToMenu(self):
+        stack.setCurrentIndex(0)
+
+    def deleteData(self):
+        getId = (self.tableWidget.item(self.tableWidget.currentRow(), 9).text())
+        self.tableWidget.removeRow(self.tableWidget.currentRow())
+        
+
+        # deletando dados da tabela clientes
+        conn = sqlite3.connect('cliente.db')
+        cursor = conn.cursor()
+        cursor.execute("""
+            DELETE FROM cliente WHERE id = (?)
+        """, [getId])
+        conn.commit()
+        conn.close()
+
+        # deletando dados da tabela projetos
+        conn = sqlite3.connect('projeto.db')
+        cursor = conn.cursor()
+        cursor.execute("""
+            DELETE FROM projeto WHERE id = (?)
+        """, [getId])
+        conn.commit()
+        conn.close()
 
     def loadData(self):
         conn = sqlite3.connect('cliente.db')
@@ -123,7 +158,7 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         cursor = conn.cursor()
 
         # lendo dados do banco Projetos
-        cursor.execute("SELECT tipo, dataContratacao, dataConclusao, valorRecebido, valorAReceber, valorTotal FROM projeto")
+        cursor.execute("SELECT tipo, dataContratacao, dataConclusao, valorRecebido, valorAReceber, valorTotal, id FROM projeto")
         tablerow = 0
         for row in cursor.fetchall():
             self.tableWidget.setItem(tablerow, 3, QtWidgets.QTableWidgetItem(row[0]))
@@ -132,23 +167,46 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
             self.tableWidget.setItem(tablerow, 6, QtWidgets.QTableWidgetItem(str(row[3])))
             self.tableWidget.setItem(tablerow, 7, QtWidgets.QTableWidgetItem(str(row[4])))
             self.tableWidget.setItem(tablerow, 8, QtWidgets.QTableWidgetItem(str(row[5])))
+            self.tableWidget.setItem(tablerow,9,QtWidgets.QTableWidgetItem(str(row[6])))
+            self.btn_delete = QtWidgets.QPushButton("Deletar")
+            self.btn_update = QtWidgets.QPushButton("Alterar")
+
+            
+
+            self.tableWidget.setCellWidget(tablerow,11,self.btn_delete)
+            self.tableWidget.setCellWidget(tablerow,10,self.btn_update)
+            self.btn_delete.clicked.connect(self.deleteData)
+            
             
             
             tablerow+=1
 
         conn.close()
 
+class ReadDebts(QtWidgets.QMainWindow):
+    def toMenu(self):
+        stack.setCurrentIndex(0)
+
+    def __init__(self):
+        super(ReadDebts, self).__init__()
+        uic.loadUi("screens/financeiro.ui", self)
+        self.btn_voltar.clicked.connect(self.toMenu)
+
 # main stack
 app = QtWidgets.QApplication([])
+app.setApplicationName("Controle Arquitetura Pereira")
+app.setWindowIcon(QtGui.QIcon('src/logo.jpeg'))
 stack = QtWidgets.QStackedWidget()
 # starting classes
 mainmenu = MainMenu()
 insert_project = InsertProject()
 read_project = ReadProject()
+read_debts = ReadDebts()
 # adding to stack
 stack.addWidget(mainmenu)
 stack.addWidget(insert_project)
 stack.addWidget(read_project)
+stack.addWidget(read_debts)
 # initializing project
 stack.showMaximized()
 app.exec()
