@@ -11,7 +11,7 @@ class Novo:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS projeto (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                tipo VARCHAR(40) NOT NULL,
+                tipodeprojeto VARCHAR(40) NOT NULL,
                 metragem INTEGER NOT NULL,
                 valorMetro INTEGER NOT NULL,
                 dataConclusao DATE NOT NULL,
@@ -45,7 +45,7 @@ class Novo:
                 email VARCHAR(40) NOT NULL,
                 email2 VARCHAR(40),
                 endereco VARCHAR(100) NOT NULL,
-                tipoDeObra VARCHAR(50) NOT NULL
+                tipodecliente VARCHAR(50) NOT NULL
             );
             """)
 

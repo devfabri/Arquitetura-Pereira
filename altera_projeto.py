@@ -1,15 +1,15 @@
 import sqlite3
 class Altera_Projeto:
-    def altera_proj(self, id_cliente, Tipo, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
+    def altera_proj(self, id_cliente, Tipodeprojeto, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
         conn = sqlite3.connect('projeto.db')
         cursor = conn.cursor()
         
         # alterando os dados da tabela
         cursor.execute("""
         UPDATE clientes
-        SET tipo = ?, metragem = ?, valorMetro = ?, dataConclusao = ?, dataContratacao = ?, valorTotal = ?, valorRecebido = ?, valorAReceber = ?, quantidadeParcelas = ?, dataParcela = ?
+        SET tipodeprojeto = ?, metragem = ?, valorMetro = ?, dataConclusao = ?, dataContratacao = ?, valorTotal = ?, valorRecebido = ?, valorAReceber = ?, quantidadeParcelas = ?, dataParcela = ?
         WHERE id = ?
-        """, (Tipo, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela, id_cliente))
+        """, (Tipodeprojeto, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela, id_cliente))
 
         conn.commit()
 
