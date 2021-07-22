@@ -135,6 +135,10 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         conn.commit()
         conn.close()
 
+    def showProject(self):
+        pop = ShowProject((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()), self)
+        pop.show()
+
     def loadData(self):
         conn = sqlite3.connect('cliente.db')
         cursor = conn.cursor()
@@ -171,18 +175,17 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
             self.btn_delete = QtWidgets.QPushButton("Deletar")
             self.btn_update = QtWidgets.QPushButton("Alterar")
 
-            
-
             self.tableWidget.setCellWidget(tablerow,11,self.btn_delete)
             self.tableWidget.setCellWidget(tablerow,10,self.btn_update)
+
             self.btn_delete.clicked.connect(self.deleteData)
-            
+            self.btn_update.clicked.connect(self.showProject)         
             
             
             tablerow+=1
 
         conn.close()
-
+    
 class ReadDebts(QtWidgets.QMainWindow):
     def toMenu(self):
         stack.setCurrentIndex(0)
@@ -191,6 +194,37 @@ class ReadDebts(QtWidgets.QMainWindow):
         super(ReadDebts, self).__init__()
         uic.loadUi("screens/financeiro.ui", self)
         self.btn_voltar.clicked.connect(self.toMenu)
+
+class ShowProject(QtWidgets.QDialog):
+    def __init__(self, id, parent):
+        super().__init__(parent)
+        uic.loadUi("screens/show_project.ui", self)
+        self.loadData(id)
+    
+    def loadData(self, id):
+        projectData = []
+        conn = sqlite3.connect('cliente.db')
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        SELECT * FROM cliente WHERE id = ?;
+        """,[id])
+
+        for row in cursor.fetchall():
+            projectData.append(row)
+
+        conn.close()
+
+
+        conn = sqlite3.connect('projeto.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM projeto WHERE id = ?",[id] )
+
+        for row in cursor.fetchall():
+            projectData.append(row)
+        conn.close()
+
+        print(projectData)
 
 # main stack
 app = QtWidgets.QApplication([])
