@@ -18,6 +18,5 @@ class Novo_Projeto(InsereFinancas):
         conn.close()
 
         print('Dados inseridos com sucesso.')
-        '''
-        self.Atualiza_Valortotal(ValorTotal)
-        self.Atualiza_ValorRecebido(ValorRecebido)'''
+       
+        InsereFinancas.Atualiza_Valortotal(ValorTotal, ValorAReceber)

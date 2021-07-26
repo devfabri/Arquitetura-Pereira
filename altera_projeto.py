@@ -1,3 +1,4 @@
+from Insere_NovoGasto import InsereFinancas
 import sqlite3
 class Altera_Projeto:
     def altera_proj(self, id_cliente, Tipodeprojeto, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
@@ -16,3 +17,5 @@ class Altera_Projeto:
         print('Dados atualizados com sucesso.')
 
         conn.close()
+
+        InsereFinancas.Atualiza_Valortotal(ValorTotal, ValorAReceber)

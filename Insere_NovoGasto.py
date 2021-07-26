@@ -1,6 +1,6 @@
 import sqlite3
 class InsereFinancas:
-    def Atualiza_Valortotal(self, ValorTotal):
+    def Atualiza_Valortotal(self, ValorTotal, ValorAReceber):
 
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
@@ -11,7 +11,15 @@ class InsereFinancas:
         """)
 
         for Valor in cursor.fetchall():
-            final = Valor
+            final = Valor + ValorTotal
+        
+        # lendo os dados
+        cursor.execute("""
+        SELECT valorAReceber FROM financeiro WHERE id = 1;
+        """)
+
+        for Valor in cursor.fetchall():
+            receber = Valor + ValorAReceber
         
         conn.close()    
         
@@ -23,9 +31,9 @@ class InsereFinancas:
         # alterando os dados da tabela
         cursor.execute("""
         UPDATE financeiro
-        SET valorTotal = ?
+        SET valorTotal = ?, valorAReceber = ?
         WHERE id = 1
-        """, (final))
+        """, (final, receber))
 
         conn.commit()
 
