@@ -4,14 +4,15 @@ class InsereFinancas:
 
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
-
+        final = 0
+        receber = 0
         # lendo os dados
         cursor.execute("""
         SELECT valorTotal FROM financeiro WHERE id = 1;
         """)
 
         for Valor in cursor.fetchall():
-            final = Valor + ValorTotal
+            final = Valor + float(ValorTotal)
         
         # lendo os dados
         cursor.execute("""
@@ -19,11 +20,11 @@ class InsereFinancas:
         """)
 
         for Valor in cursor.fetchall():
-            receber = Valor + ValorAReceber
+            receber = Valor + float(ValorAReceber)
         
         conn.close()    
         
-        final = final + ValorTotal
+        final = final + float(ValorTotal)
 
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()

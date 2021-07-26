@@ -19,4 +19,4 @@ class Novo_Projeto(InsereFinancas):
 
         print('Dados inseridos com sucesso.')
        
-        InsereFinancas.Atualiza_Valortotal(ValorTotal, ValorAReceber)
+        InsereFinancas.Atualiza_Valortotal(self,ValorTotal, ValorAReceber)

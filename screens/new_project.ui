@@ -216,7 +216,7 @@ QPushButton:pressed {
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Nome:*</string>
+             <string>Nome:</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -229,6 +229,23 @@ QPushButton:pressed {
              <font>
               <pointsize>11</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
+            </property>
+            <property name="frame">
+             <bool>true</bool>
+            </property>
+            <property name="echoMode">
+             <enum>QLineEdit::Normal</enum>
             </property>
            </widget>
           </item>
@@ -245,6 +262,17 @@ QPushButton:pressed {
              <font>
               <pointsize>11</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
             </property>
            </widget>
           </item>
@@ -276,6 +304,33 @@ QPushButton:pressed {
            <number>0</number>
           </property>
           <item>
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>CPF/CNPJ:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="cpf">
+            <property name="font">
+             <font>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>Telefone 1:</string>
@@ -289,8 +344,19 @@ QPushButton:pressed {
               <pointsize>11</pointsize>
              </font>
             </property>
-            <property name="inputMask">
-             <string/>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
+            </property>
+            <property name="inputMethodHints">
+             <set>Qt::ImhNone</set>
             </property>
             <property name="text">
              <string/>
@@ -319,6 +385,17 @@ QPushButton:pressed {
              <font>
               <pointsize>11</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
             </property>
            </widget>
           </item>
@@ -396,6 +473,20 @@ QPushButton:pressed {
               <pointsize>11</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
+            </property>
+            <property name="inputMethodHints">
+             <set>Qt::ImhEmailCharactersOnly</set>
+            </property>
            </widget>
           </item>
           <item>
@@ -411,6 +502,17 @@ QPushButton:pressed {
              <font>
               <pointsize>11</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QLineEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
             </property>
            </widget>
           </item>
@@ -513,6 +615,17 @@ QPushButton:pressed {
               <width>0</width>
               <height>40</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QTextEdit {
+border-width: 1px;
+border-style: solid;
+border-color: rgb(188, 188, 188);
+}
+
+QTextEdit:hover{
+	border-color: rgb(149, 149, 149);
+}</string>
             </property>
            </widget>
           </item>
@@ -634,18 +747,15 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="tamanho_obra">
+           <widget class="QSpinBox" name="tamanho_obra">
             <property name="minimumSize">
              <size>
-              <width>60</width>
+              <width>40</width>
               <height>35</height>
              </size>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>50</width>
-              <height>16777215</height>
-             </size>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -681,10 +791,14 @@ QPushButton:pressed {
              <bool>false</bool>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(255, 255, 255);</string>
+             <string notr="true">color: rgb(0, 0, 0);
+</string>
             </property>
             <property name="wrapping">
              <bool>false</bool>
+            </property>
+            <property name="frame">
+             <bool>true</bool>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -733,7 +847,7 @@ QPushButton:pressed {
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(255, 255, 255);r</string>
+             <string notr="true">color: rgb(0,0,0);r</string>
             </property>
             <property name="minimumDateTime">
              <datetime>
@@ -783,126 +897,6 @@ QPushButton:pressed {
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>Valor a receber:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="valor_areceber">
-            <property name="minimumSize">
-             <size>
-              <width>50</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="maximum">
-             <double>9999999999999.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>Qnt. de parcelas:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="qnt_parcelas">
-            <property name="minimumSize">
-             <size>
-              <width>40</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_19">
-            <property name="text">
-             <string>Data de vencimento:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDateEdit" name="data_vencimento">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="wrapping">
-             <bool>false</bool>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-            <property name="readOnly">
-             <bool>false</bool>
-            </property>
-            <property name="calendarPopup">
-             <bool>true</bool>
-            </property>
-            <property name="timeSpec">
-             <enum>Qt::LocalTime</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item>
            <widget class="QLabel" name="label_12">
             <property name="text">
@@ -965,6 +959,132 @@ QPushButton:pressed {
             </property>
             <property name="maximum">
              <double>999999999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Valor a receber:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="valor_areceber">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="maximum">
+             <double>9999999999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Qnt. de parcelas:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="qnt_parcelas">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="maximum">
+             <number>500</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Dia de vencimento:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDateEdit" name="data_vencimento">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:black;</string>
+            </property>
+            <property name="wrapping">
+             <bool>false</bool>
+            </property>
+            <property name="frame">
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+            <property name="displayFormat">
+             <string>dd</string>
+            </property>
+            <property name="calendarPopup">
+             <bool>false</bool>
+            </property>
+            <property name="timeSpec">
+             <enum>Qt::LocalTime</enum>
             </property>
            </widget>
           </item>

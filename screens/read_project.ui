@@ -118,13 +118,13 @@ QPushButton:pressed {
      <widget class="QTableWidget" name="tableWidget">
       <property name="minimumSize">
        <size>
-        <width>900</width>
+        <width>1000</width>
         <height>300</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>900</width>
+        <width>1000</width>
         <height>300</height>
        </size>
       </property>
@@ -158,6 +158,9 @@ QPushButton:pressed {
       <attribute name="horizontalHeaderStretchLastSection">
        <bool>false</bool>
       </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
       <attribute name="verticalHeaderStretchLastSection">
        <bool>false</bool>
       </attribute>
@@ -175,10 +178,16 @@ QPushButton:pressed {
        <property name="text">
         <string>Cliente</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>Projeto</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
        </property>
       </column>
       <column>
@@ -204,6 +213,21 @@ QPushButton:pressed {
       <column>
        <property name="text">
         <string>Valor Total</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string/>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string/>
        </property>
       </column>
      </widget>
@@ -251,6 +275,9 @@ QPushButton:pressed {
            <width>200</width>
            <height>35</height>
           </size>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
