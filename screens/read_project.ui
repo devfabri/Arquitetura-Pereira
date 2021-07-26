@@ -178,10 +178,16 @@ QPushButton:pressed {
        <property name="text">
         <string>Cliente</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>Projeto</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
        </property>
       </column>
       <column>
@@ -269,6 +275,9 @@ QPushButton:pressed {
            <width>200</width>
            <height>35</height>
           </size>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {

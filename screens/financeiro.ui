@@ -1002,16 +1002,60 @@ QPushButton:pressed {
       </layout>
      </widget>
     </item>
-    <item>
+    <item alignment="Qt::AlignHCenter">
      <widget class="QFrame" name="inferior">
+      <property name="maximumSize">
+       <size>
+        <width>600</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QPushButton" name="btn_adicionar_gasto">
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: #ffffff;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	background-color: rgb(223, 223, 223);
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+QPushButton:pressed {
+	background-color: rgb(200, 200, 200);
+	border: 1px solid black;
+	border-radius: 5px;
+}</string>
+         </property>
+         <property name="text">
+          <string>Adicionar Gasto</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignLeft|Qt::AlignVCenter">
         <widget class="QPushButton" name="btn_reload">
          <property name="minimumSize">
           <size>
@@ -1021,7 +1065,7 @@ QPushButton:pressed {
          </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>150</width>
            <height>35</height>
           </size>
          </property>
@@ -1046,6 +1090,44 @@ QPushButton:pressed {
          </property>
          <property name="text">
           <string>Atualizar Banco</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_relatorio">
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: #ffffff;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	background-color: rgb(223, 223, 223);
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+QPushButton:pressed {
+	background-color: rgb(200, 200, 200);
+	border: 1px solid black;
+	border-radius: 5px;
+}</string>
+         </property>
+         <property name="text">
+          <string>Relatório Financeiro</string>
          </property>
         </widget>
        </item>

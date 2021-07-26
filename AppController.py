@@ -11,6 +11,8 @@ from bd import Novo_BD
 from novo import Novo
 from ler_CF import Ler_CF
 from ler_projeto import Ler_Projeto
+from altera_projeto import Altera_Projeto
+from altera_CF import Altera_CF
 
 class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
     def toInsertScreen(self):
@@ -40,22 +42,22 @@ class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
         self.tipoCliente = 0
         self.tipoObra = 0
         if self.tipo_fisico.isChecked():
-            self.tipoCliente = 1
+            self.tipoCliente = "Físico"
         elif self.tipo_juridico.isChecked():
-            self.tipoCliente = 2
+            self.tipoCliente = "Jurídico"
         
         if self.obratype_residencial.isChecked(): 
-            self.tipoObra = 1 
+            self.tipoObra = "Residencial" 
         elif self.obratype_comercio.isChecked(): 
-            self.tipoObra = 2 
+            self.tipoObra = "Comércio" 
         elif self.obratype_consultoria.isChecked():
-            self.tipoObra = 3
+            self.tipoObra = "Consultoria"
         elif self.obratype_empresarial.isChecked():
-            self.tipoObra = 4
+            self.tipoObra = "Empresarial"
 
         self.insere_Novo_Projeto(
             self.tipoObra,
-            self.tamanho_obra.text(),
+            self.tamanho_obra.value(),
             self.valor_m2.text(),
             self.data_finalizacao.date().toString("yyyy-MM-dd"),
             self.data_contratacao.date().toString("yyyy-MM-dd"),
@@ -73,15 +75,29 @@ class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
             self.email1.text(),
             self.email2.text(),
             self.endereco.toPlainText(),
-            self.tipoCliente)
-        
+            self.tipoCliente
+            )
+        # Clear Form
+        self.nome1.clear()
+        self.nome2.clear()
+        self.telefone1.clear()
+        self.telefone2.clear()
+        self.email1.clear()
+        self.email2.clear()
+        self.endereco.clear()
+        self.tamanho_obra.clear()
+        self.valor_m2.clear()
+        self.valor_obra.clear()
+        self.valor_recebido.clear()
+        self.valor_areceber.clear()
+        self.qnt_parcelas.clear()
 
     def __init__(self):
         super(InsertProject, self).__init__()
         uic.loadUi("screens/new_project.ui", self)
         self.voltar.clicked.connect(self.toMenu)
         self.inserirProjeto.clicked.connect(self.collectData)
-        self.data_vencimento.setDate(datetime.datetime.now().date())
+        
         self.data_contratacao.setDate(datetime.datetime.now().date())
         self.data_finalizacao.setDate(datetime.datetime.now().date())
 
@@ -101,6 +117,7 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.setColumnHidden(9,True)
         self.tableWidget.setRowCount(50)
         self.btn_voltar.clicked.connect(self.backToMenu)
         self.btn_reload.clicked.connect(self.loadData)
@@ -190,16 +207,41 @@ class ReadDebts(QtWidgets.QMainWindow):
     def toMenu(self):
         stack.setCurrentIndex(0)
 
+    def loadDebts(self):
+        pass
+
+    def adicionarGasto(self):
+        pop = AdicionaGasto(self)
+        pop.show()
+
+    def abrirRelatorio(self):
+        pop = RelatorioFinanceiro(self)
+        pop.show()
+
     def __init__(self):
         super(ReadDebts, self).__init__()
         uic.loadUi("screens/financeiro.ui", self)
         self.btn_voltar.clicked.connect(self.toMenu)
+        self.btn_reload.clicked.connect(self.loadDebts)
+        self.btn_adicionar_gasto.clicked.connect(self.adicionarGasto)
+        self.btn_relatorio.clicked.connect(self.abrirRelatorio)
 
-class ShowProject(QtWidgets.QDialog):
+class AdicionaGasto(QtWidgets.QDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        uic.loadUi("screens/adicionar_gasto.ui", self)
+
+class RelatorioFinanceiro(QtWidgets.QDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        uic.loadUi("screens/relatorio_financeiro.ui", self)
+
+class ShowProject(QtWidgets.QDialog, Altera_Projeto, Altera_CF):
     def __init__(self, id, parent):
         super().__init__(parent)
         uic.loadUi("screens/show_project.ui", self)
         self.loadData(id)
+        self.btn_alterar.clicked.connect(self.atualizaProjeto)
     
     def loadData(self, id):
         projectData = []
@@ -224,8 +266,36 @@ class ShowProject(QtWidgets.QDialog):
             projectData.append(row)
         conn.close()
 
-        print(projectData)
+        self.showData(projectData)
 
+    def showData(self, data):
+        self.nome1.setText(data[0][1])
+        self.nome2.setText(data[0][2])
+        self.telefone1.setText(data[0][3])
+        self.telefone2.setText(data[0][4])
+        self.email1.setText(data[0][5])
+        self.email2.setText(data[0][6])
+        self.endereco.setText(data[0][7])
+        self.tipo_cliente.setText(data[0][8])
+
+        self.tipo_obra.setText(data[1][1])
+        self.metragem.setText(str(data[1][2]))
+        self.valor_metro.setText(str(data[1][3]))
+        self.data_conclusao.setDate(QDate.fromString(data[1][4], "yyyy-MM-dd"))
+        self.data_contratacao.setDate(QDate.fromString(data[1][5], "yyyy-MM-dd"))
+        self.valor_total.setText(data[1][6])
+        self.valor_recebido.setText(data[1][7])
+        self.valor_a_receber.setText(data[1][8])
+        self.qnt_parcelas.setValue(int(data[1][9]))
+        self.vencimento_parcela.setDate(QDate.fromString(data[1][10], "yyyy-MM-dd"))
+
+    def atualizaProjeto(self, id):
+        self.altera_cf(
+            id,self.nome1.text(), self.nome2.text(),self.telefone1.text(), self.telefone2.text(), self.email1.text(), self.email2.text(),self.endereco.toPlainText(),self.tipo_cliente.text()
+            )
+        self.altera_proj(
+            id, self.tipo_obra.text(), self.metragem.text(), self.valor_metro.text(), self.data_conclusao.date().toPlainText(), self.data_contratacao.date().toPlainText(), self.valor_total.text(), self.valor_recebido.text(), self.valor_a_receber.text(), self.qnt_parcelas.value(), self.vencimento_parcela.date().toPlainText())
+        
 # main stack
 app = QtWidgets.QApplication([])
 app.setApplicationName("Controle Arquitetura Pereira")
