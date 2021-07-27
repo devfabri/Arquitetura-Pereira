@@ -2,6 +2,18 @@ import sqlite3
 class Novo_Gasto:
     def Insere_Dados(self,ValorAReceber, ValorDesenhista, ValorImpostos, ValorContabilidade, ValorFuncionarios, ValorPapelaria, ValorFaxina, OutrosGastos, DetalhesGastos):
 
+        Valor = 0
+        final = 0
+        desenhista = 0
+        receber = 0 
+        impostos = 0
+        contabil = 0 
+        funcionario = 0
+        papelaria = 0
+        faxina = 0
+        outros = 0
+        receber = 0
+        
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
@@ -9,7 +21,7 @@ class Novo_Gasto:
         cursor.execute("""
         SELECT valorTotal FROM financeiro WHERE id = 1;
         """)
-
+  
         for Valor in cursor.fetchall():
             final = Valor
         
