@@ -283,9 +283,9 @@ class ShowProject(QtWidgets.QDialog, Altera_Projeto, Altera_CF):
         self.valor_metro.setText(str(data[1][3]))
         self.data_conclusao.setDate(QDate.fromString(data[1][4], "yyyy-MM-dd"))
         self.data_contratacao.setDate(QDate.fromString(data[1][5], "yyyy-MM-dd"))
-        self.valor_total.setText(data[1][6])
-        self.valor_recebido.setText(data[1][7])
-        self.valor_a_receber.setText(data[1][8])
+        self.valor_total.setValue((data[1][6]))
+        self.valor_recebido.setValue((data[1][7]))
+        self.valor_a_receber.setValue((data[1][8]))
         self.qnt_parcelas.setValue(int(data[1][9]))
         self.vencimento_parcela.setDate(QDate.fromString(data[1][10], "yyyy-MM-dd"))
 

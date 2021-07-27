@@ -322,28 +322,10 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="valor_total">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
       <item row="6" column="0">
        <widget class="QLabel" name="label_15">
         <property name="text">
          <string>Valor Recebido:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLineEdit" name="valor_recebido">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
         </property>
        </widget>
       </item>
@@ -389,14 +371,14 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="1">
+       <widget class="QDoubleSpinBox" name="valor_total"/>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="valor_recebido"/>
+      </item>
       <item row="7" column="1">
-       <widget class="QLineEdit" name="valor_a_receber">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-       </widget>
+       <widget class="QDoubleSpinBox" name="valor_a_receber"/>
       </item>
      </layout>
     </widget>
