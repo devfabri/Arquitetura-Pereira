@@ -157,8 +157,15 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         conn.commit()
         conn.close()
 
-        # deletando dados da tabela projetos
+        # salvando valor a receber e deletando dados da tabela projetos
         conn = sqlite3.connect('projeto.db')
+        cursor = conn.cursor()
+
+        cursor.execute(""" SELECT valorAReceber from projeto WHERE id = ? """, getId)
+        a_receber = cursor.fetchone()
+        areceber = -a_receber[0]
+        
+
         cursor = conn.cursor()
         cursor.execute("""
             DELETE FROM projeto WHERE id = (?)
@@ -166,6 +173,14 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         conn.commit()
         conn.close()
 
+        # ATUALIZANDO FINANCEIRO
+
+        conn = sqlite3.connect('financeiro.db')
+        cursor = conn.cursor()
+
+        cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?) """, (areceber, "Projeto Deletado", date.today()))
+        conn.commit()
+        conn.close()
     def showProject(self):
         pop = ShowProject((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()), self)
         pop.show()
@@ -242,6 +257,7 @@ class ReadDebts(QtWidgets.QMainWindow):
 
         conn.commit()
         conn.close()
+    
     def adicionarGasto(self):
         pop = AdicionaGasto(self)
         pop.show()
@@ -281,7 +297,8 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        
         
         self.tableWidget.setRowCount(50)
         self.btn_reload.clicked.connect(self.loadRelatorio)
@@ -311,7 +328,8 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         
 
         conn.close()
-
+        
+        
 class ShowProject(QtWidgets.QDialog):
     def __init__(self, id, parent):
         super().__init__(parent)
