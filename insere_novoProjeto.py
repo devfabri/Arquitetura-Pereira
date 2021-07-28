@@ -1,7 +1,7 @@
-from Insere_NovoGasto import InsereFinancas
 import sqlite3
+from financeiro import FinanceiroController
 
-class Novo_Projeto(InsereFinancas):
+class Novo_Projeto(FinanceiroController):
     def insere_Novo_Projeto(self, Tipodeprojeto, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
 
         conn = sqlite3.connect('projeto.db')
@@ -17,6 +17,6 @@ class Novo_Projeto(InsereFinancas):
 
         conn.close()
 
-        print('Dados inseridos com sucesso.')
-       
-        InsereFinancas.Atualiza_Valortotal(self,ValorTotal, ValorAReceber)
+        print('Dados inseridos em -projeto- com sucesso.')
+
+        self.dividaProjeto(ValorAReceber)

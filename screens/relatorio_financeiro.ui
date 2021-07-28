@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
+    <width>900</width>
     <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
+    <width>900</width>
     <height>300</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>500</width>
+    <width>900</width>
     <height>500</height>
    </size>
   </property>
@@ -34,8 +34,26 @@
    </property>
    <item>
     <widget class="QTableWidget" name="tableWidget">
-     <attribute name="horizontalHeaderStretchLastSection">
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked</set>
+     </property>
+     <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+     <property name="textElideMode">
+      <enum>Qt::ElideNone</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderStretchLastSection">
+      <bool>false</bool>
      </attribute>
      <column>
       <property name="text">
@@ -44,9 +62,62 @@
      </column>
      <column>
       <property name="text">
+       <string>A Receber</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Desenhista</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Impostos</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Contabilidade</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Funcionarios</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Papelaria</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Faxina</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Outros</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
        <string>Relatório</string>
       </property>
      </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_reload">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Atualizar Relatorio</string>
+     </property>
     </widget>
    </item>
   </layout>

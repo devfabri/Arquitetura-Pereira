@@ -1,4 +1,3 @@
-from Insere_NovoGasto import InsereFinancas
 import sqlite3
 class Altera_Projeto:
     def altera_proj(self, id_cliente, Tipodeprojeto, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela):
@@ -7,7 +6,7 @@ class Altera_Projeto:
         
         # alterando os dados da tabela
         cursor.execute("""
-        UPDATE clientes
+        UPDATE projeto
         SET tipodeprojeto = ?, metragem = ?, valorMetro = ?, dataConclusao = ?, dataContratacao = ?, valorTotal = ?, valorRecebido = ?, valorAReceber = ?, quantidadeParcelas = ?, dataParcela = ?
         WHERE id = ?
         """, (Tipodeprojeto, Metragem, ValorMetro, DataConclusao, DataContratacao, ValorTotal, ValorRecebido, ValorAReceber, QuantidadeParcelas, DataParcela, id_cliente))
@@ -18,4 +17,4 @@ class Altera_Projeto:
 
         conn.close()
 
-        InsereFinancas.Atualiza_Valortotal(ValorTotal, ValorAReceber)
+        

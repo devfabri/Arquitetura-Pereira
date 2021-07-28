@@ -12,20 +12,20 @@ class Novo:
             CREATE TABLE IF NOT EXISTS projeto (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 tipodeprojeto VARCHAR(40) NOT NULL,
-                metragem INTEGER NOT NULL,
-                valorMetro INTEGER NOT NULL,
+                metragem DOUBLE NOT NULL,
+                valorMetro DOUBLE NOT NULL,
                 dataConclusao DATE NOT NULL,
                 dataContratacao DATE NOT NULL,
-                valorTotal INTEGER NOT NULL,
-                valorRecebido INTEGER NOT NULL,
-                valorAReceber INTEGER NOT NULL,
+                valorTotal DOUBLE NOT NULL,
+                valorRecebido DOUBLE NOT NULL,
+                valorAReceber DOUBLE NOT NULL,
                 quantidadeParcelas INTEGER NOT NULL,
                 dataParcela DATE NOT NULL
             );
             """)
 
 
-        print('Tabela criada com sucesso.')
+        print('Tabela projeto criada com sucesso.')
         # desconectando...
         conn.close()
 
@@ -45,11 +45,12 @@ class Novo:
                 email VARCHAR(40) NOT NULL,
                 email2 VARCHAR(40),
                 endereco VARCHAR(100) NOT NULL,
-                tipodecliente VARCHAR(50) NOT NULL
+                tipodecliente VARCHAR(50) NOT NULL,
+                cpf VARCHAR(40)
             );
             """)
 
-        print('Tabela criada com sucesso.')
+        print('Tabela cliente criada com sucesso.')
         # desconectando...
         conn.close()
 
@@ -62,20 +63,21 @@ class Novo:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS financeiro (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                valorTotal INTEGER ,
-                valorAReceber INTEGER NOT NULL,
-                valorDesenhista INTEGER NOT NULL,
-                valorImpostos INTEGER NOT NULL,
-                valorContabilidade INTEGER NOT NULL,
-                valorFuncionarios INTEGER NOT NULL,
-                valorPapelaria INTEGER NOT NULL,
-                valorFaxina INTEGER NOT NULL,
-                outrosGastos INTEGER NOT NULL,                
+                data DATE,
+                valorAReceber DOUBLE DEFAULT 0.00,
+                valorDesenhista DOUBLE DEFAULT 0.00,
+                valorImpostos DOUBLE DEFAULT 0.00,
+                valorContabilidade DOUBLE DEFAULT 0.00,
+                valorFuncionarios DOUBLE DEFAULT 0.00,
+                valorPapelaria DOUBLE DEFAULT 0.00,
+                valorFaxina DOUBLE DEFAULT 0.00,
+                outrosGastos DOUBLE DEFAULT 0.00,                
                 detalhesGastos VARCHAR(4000)
+                                
             );
             """)
 
-        print('Tabela criada com sucesso.')
+        print('Tabela financeiro criada com sucesso.')
         # desconectando...
         conn.close()
 

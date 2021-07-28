@@ -908,7 +908,7 @@ QTextEdit:hover{
            <widget class="QDoubleSpinBox" name="valor_obra">
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>100</width>
               <height>35</height>
              </size>
             </property>
@@ -947,7 +947,7 @@ QTextEdit:hover{
            <widget class="QDoubleSpinBox" name="valor_recebido">
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>100</width>
               <height>35</height>
              </size>
             </property>
@@ -990,8 +990,14 @@ QTextEdit:hover{
               <height>35</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(206, 206, 206);</string>
+            </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
