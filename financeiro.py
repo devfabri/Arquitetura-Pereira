@@ -1,12 +1,12 @@
 import sqlite3
-from datetime import date
+from datetime import datetime
 
 class FinanceiroController():
     def dividaProjeto(self, valorReceber):
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
-        cursor.execute("""INSERT INTO financeiro (valorAReceber, data, detalhesGastos) VALUES (?,?,?)""", (valorReceber, date.today(), "Gastos em Novo Projeto"))
+        cursor.execute("""INSERT INTO financeiro (valorAReceber, data, detalhesGastos) VALUES (?,?,?)""", (valorReceber, datetime.now().strftime("%d/%m/%Y %H:%M:%S"), "Gastos em Novo Projeto"))
 
         conn.commit()
         conn.close()

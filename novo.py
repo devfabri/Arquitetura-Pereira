@@ -63,7 +63,7 @@ class Novo:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS financeiro (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                data DATE,
+                data DATETIME,
                 valorAReceber DOUBLE DEFAULT 0.00,
                 valorDesenhista DOUBLE DEFAULT 0.00,
                 valorImpostos DOUBLE DEFAULT 0.00,

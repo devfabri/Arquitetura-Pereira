@@ -181,6 +181,7 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?) """, (areceber, "Projeto Deletado", date.today()))
         conn.commit()
         conn.close()
+    
     def showProject(self):
         pop = ShowProject((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()), self)
         pop.show()
@@ -194,7 +195,8 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         SELECT nomeCliente,  telefone,  tipodecliente 
         FROM cliente;
         """)
-        
+        rows_qnt = len(cursor.fetchall())
+        self.tableWidget.setRowCount(rows_qnt)
         tablerow = 0
         for row in cursor.fetchall():
             self.tableWidget.setItem(tablerow, 0, QtWidgets.QTableWidgetItem(row[0]))
@@ -282,13 +284,14 @@ class AdicionaGasto(QtWidgets.QDialog, FinanceiroController):
         self.btn_alterar.clicked.connect(self.insereGastos)
 
     def insereGastos(self):
-        self.dividaGeral(datetime.date.today(), self.val_desenhista.value(), self.val_impostos.value(),self.val_contabilidade.value(), self.val_funcionarios.value(), self.val_papelaria.value(), self.val_faxina.value(), self.val_outros.value(), self.entry_relatorio.toPlainText())
+        self.dividaGeral(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"), self.val_desenhista.value(), self.val_impostos.value(),self.val_contabilidade.value(), self.val_funcionarios.value(), self.val_papelaria.value(), self.val_faxina.value(), self.val_outros.value(), self.entry_relatorio.toPlainText())
         self.accept()
 
 class RelatorioFinanceiro(QtWidgets.QDialog):
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi("screens/relatorio_financeiro.ui", self)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
@@ -297,7 +300,7 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
         
         
         self.tableWidget.setRowCount(50)
@@ -308,11 +311,16 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
-        sql = """SELECT * FROM financeiro"""
-        cursor.execute(sql)
+        
+        cursor.execute("""SELECT * FROM financeiro;""")
+
+        rows_qnt = len(cursor.fetchall())
+        self.tableWidget.setRowCount(rows_qnt)
+
+        cursor = conn.cursor()
+        cursor.execute("""SELECT * FROM financeiro ORDER BY data DESC;""")
 
         tableRow = 0
-
         for row in cursor.fetchall():
             self.tableWidget.setItem(tableRow, 0, QtWidgets.QTableWidgetItem(row[1]))
             self.tableWidget.setItem(tableRow, 1, QtWidgets.QTableWidgetItem(str(row[2])))
