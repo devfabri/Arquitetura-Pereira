@@ -747,15 +747,27 @@ QTextEdit:hover{
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="tamanho_obra">
+           <widget class="QDoubleSpinBox" name="tamanho_obra">
             <property name="minimumSize">
              <size>
-              <width>40</width>
+              <width>50</width>
               <height>35</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>16777215</height>
              </size>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="maximum">
+             <double>9999999999999.000000000000000</double>
             </property>
            </widget>
           </item>

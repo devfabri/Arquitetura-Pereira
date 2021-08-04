@@ -16,16 +16,40 @@ from ler_projeto import Ler_Projeto
 from altera_projeto import Altera_Projeto
 from altera_CF import Altera_CF
 
+class LoginPage(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(LoginPage, self).__init__()
+        uic.loadUi("screens/login.ui", self)
+        self.getPassword()
+        self.entrar.clicked.connect(self.validar)
+        self.altera_senha.clicked.connect(self.changePassword)
+
+    def getPassword(self):
+        conn = sqlite3.connect('usuario.db')
+        cursor = conn.cursor()
+        cursor.execute(""" SELECT password FROM usuario WHERE id = 1 """)
+        self.password = cursor.fetchone()[0]
+
+    def changePassword(self):
+        oldPass, pressed = QtWidgets.QInputDialog.getText(self, "Atualização de Senha", "Insira a senha atual:", QtWidgets.QLineEdit.Password)
+
+        if pressed and oldPass == self.password:
+            newPass, pressed = QtWidgets.QInputDialog.getText(self, "Atualização de Senha", "Insira a nova senha:", QtWidgets.QLineEdit.Normal)
+            conn = sqlite3.connect("usuario.db")
+            cursor = conn.cursor()
+
+            cursor.execute(""" UPDATE usuario SET password = ? WHERE id = 1 """, [newPass])
+
+            conn.commit()
+            conn.close()
+        self.getPassword()
+    def validar(self):
+        passinput = self.senha.text()
+        
+        if passinput == self.password:
+            stack.setCurrentIndex(1)
+
 class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
-    def toInsertScreen(self):
-        stack.setCurrentIndex(1)
-
-    def toReadScreen(self):
-        stack.setCurrentIndex(2)
-    
-    def toReadDebts(self):
-        stack.setCurrentIndex(3)
-
     def __init__(self):
         super(MainMenu, self).__init__()
         uic.loadUi("screens/menu.ui", self)
@@ -34,67 +58,84 @@ class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
         self.btn_new.clicked.connect(self.toInsertScreen)
         self.btn_read.clicked.connect(self.toReadScreen)
         self.btn_financeiro.clicked.connect(self.toReadDebts)
+        
+              
+        
+    def closeApp(self):
+        app.quit()
+        
+    def toInsertScreen(self):
+        stack.setCurrentIndex(2)
+
+    def toReadScreen(self):
+        stack.setCurrentIndex(3)
+    
+    def toReadDebts(self):
+        stack.setCurrentIndex(4)
 
 class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
     def toMenu(self):
-        stack.setCurrentIndex(0)
+        stack.setCurrentIndex(1)
 
     def collectData(self):
-        ## Coleta de informações dos radio buttons
-        self.tipoCliente = 0
-        self.tipoObra = 0
-        if self.tipo_fisico.isChecked():
-            self.tipoCliente = "Físico"
-        elif self.tipo_juridico.isChecked():
-            self.tipoCliente = "Jurídico"
-        
-        if self.obratype_residencial.isChecked(): 
-            self.tipoObra = "Residencial" 
-        elif self.obratype_comercio.isChecked(): 
-            self.tipoObra = "Comércio" 
-        elif self.obratype_consultoria.isChecked():
-            self.tipoObra = "Consultoria"
-        elif self.obratype_empresarial.isChecked():
-            self.tipoObra = "Empresarial"
+        accepted = QtWidgets.QMessageBox.question(self,"Confirmação","Tem certeza que deseja Inserir o Projeto?",QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No )
+        if accepted == QtWidgets.QMessageBox.Yes:
 
-        self.insere_Novo_Projeto(
-            self.tipoObra,
-            self.tamanho_obra.value(),
-            self.valor_m2.value(),
-            self.data_finalizacao.date().toString("yyyy-MM-dd"),
-            self.data_contratacao.date().toString("yyyy-MM-dd"),
-            self.valor_obra.value(),
-            self.valor_recebido.value(),
-            self.valor_areceber.value(),
-            self.qnt_parcelas.value(),
-            self.data_vencimento.date().toString("yyyy-MM-dd"))
+            ## Coleta de informações dos radio buttons
+            self.tipoCliente = 0
+            self.tipoObra = 0
+            if self.tipo_fisico.isChecked():
+                self.tipoCliente = "Físico"
+            elif self.tipo_juridico.isChecked():
+                self.tipoCliente = "Jurídico"
+            
+            if self.obratype_residencial.isChecked(): 
+                self.tipoObra = "Residencial" 
+            elif self.obratype_comercio.isChecked(): 
+                self.tipoObra = "Comércio" 
+            elif self.obratype_consultoria.isChecked():
+                self.tipoObra = "Consultoria"
+            elif self.obratype_empresarial.isChecked():
+                self.tipoObra = "Empresarial"
 
-        self.insere_Novo_CF(
-            self.nome1.text(),
-            self.nome2.text(),
-            self.telefone1.text(),
-            self.telefone2.text(),
-            self.email1.text(),
-            self.email2.text(),
-            self.endereco.toPlainText(),
-            self.tipoCliente,
-            self.cpf.text()
-            )
-        # Clear Form
-        self.nome1.clear()
-        self.nome2.clear()
-        self.telefone1.clear()
-        self.telefone2.clear()
-        self.email1.clear()
-        self.email2.clear()
-        self.endereco.clear()
-        self.tamanho_obra.clear()
-        self.valor_m2.clear()
-        self.valor_obra.clear()
-        self.valor_recebido.clear()
-        self.valor_areceber.clear()
-        self.qnt_parcelas.clear()
-        self.cpf.clear()
+            self.insere_Novo_Projeto(
+                self.tipoObra,
+                self.tamanho_obra.value(),
+                self.valor_m2.value(),
+                self.data_finalizacao.date().toString("yyyy-MM-dd"),
+                self.data_contratacao.date().toString("yyyy-MM-dd"),
+                self.valor_obra.value(),
+                self.valor_recebido.value(),
+                self.valor_areceber.value(),
+                self.qnt_parcelas.value(),
+                self.data_vencimento.date().toString("yyyy-MM-dd"))
+
+            self.insere_Novo_CF(
+                self.nome1.text(),
+                self.nome2.text(),
+                self.telefone1.text(),
+                self.telefone2.text(),
+                self.email1.text(),
+                self.email2.text(),
+                self.endereco.toPlainText(),
+                self.tipoCliente,
+                self.cpf.text()
+                )
+            # Clear Form
+            self.nome1.clear()
+            self.nome2.clear()
+            self.telefone1.clear()
+            self.telefone2.clear()
+            self.email1.clear()
+            self.email2.clear()
+            self.endereco.clear()
+            self.tamanho_obra.clear()
+            self.valor_m2.clear()
+            self.valor_obra.clear()
+            self.valor_recebido.clear()
+            self.valor_areceber.clear()
+            self.qnt_parcelas.clear()
+            self.cpf.clear()
 
     def __init__(self):
         super(InsertProject, self).__init__()
@@ -106,8 +147,7 @@ class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
         self.data_finalizacao.setDate(datetime.datetime.now().date())
 
         self.valor_obra.valueChanged.connect(self.resto_calculator)
-        self.valor_recebido.valueChanged.connect(self.resto_calculator)
-        
+        self.valor_recebido.valueChanged.connect(self.resto_calculator)  
 
     def resto_calculator(self):
         final = 0
@@ -131,6 +171,7 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(12, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.setColumnHidden(9,True)
         self.tableWidget.setRowCount(50)
         self.btn_voltar.clicked.connect(self.backToMenu)
@@ -141,47 +182,41 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         '''self.loadJobData()'''
     
     def backToMenu(self):
-        stack.setCurrentIndex(0)
+        stack.setCurrentIndex(1)
 
     def deleteData(self):
         getId = (self.tableWidget.item(self.tableWidget.currentRow(), 9).text())
-        self.tableWidget.removeRow(self.tableWidget.currentRow())
+
+        accepted = QtWidgets.QMessageBox.question(self,"Confirmação","Tem certeza que deseja deletar?",QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No )
+        if accepted == QtWidgets.QMessageBox.Yes:
+            self.tableWidget.removeRow(self.tableWidget.currentRow())
+            # deletando dados da tabela clientes
+            conn = sqlite3.connect('cliente.db')
+            cursor = conn.cursor()
+            cursor.execute("""
+                DELETE FROM cliente WHERE id = (?)
+            """, [getId])
+            conn.commit()
+            conn.close()
+            # salvando valor a receber e deletando dados da tabela projetos
+            conn = sqlite3.connect('projeto.db')
+            cursor = conn.cursor()
+            cursor.execute(""" SELECT valorAReceber from projeto WHERE id = ? """, getId)
+            a_receber = cursor.fetchone()
+            areceber = -a_receber[0]
+            cursor = conn.cursor()
+            cursor.execute("""
+                DELETE FROM projeto WHERE id = (?)
+            """, [getId])
+            conn.commit()
+            conn.close()
+            # ATUALIZANDO FINANCEIRO
+            conn = sqlite3.connect('financeiro.db')
+            cursor = conn.cursor()
+            cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?) """, (areceber, "Projeto Deletado", datetime.datetime.now()))
+            conn.commit()
+            conn.close()
         
-
-        # deletando dados da tabela clientes
-        conn = sqlite3.connect('cliente.db')
-        cursor = conn.cursor()
-        cursor.execute("""
-            DELETE FROM cliente WHERE id = (?)
-        """, [getId])
-        conn.commit()
-        conn.close()
-
-        # salvando valor a receber e deletando dados da tabela projetos
-        conn = sqlite3.connect('projeto.db')
-        cursor = conn.cursor()
-
-        cursor.execute(""" SELECT valorAReceber from projeto WHERE id = ? """, getId)
-        a_receber = cursor.fetchone()
-        areceber = -a_receber[0]
-        
-
-        cursor = conn.cursor()
-        cursor.execute("""
-            DELETE FROM projeto WHERE id = (?)
-        """, [getId])
-        conn.commit()
-        conn.close()
-
-        # ATUALIZANDO FINANCEIRO
-
-        conn = sqlite3.connect('financeiro.db')
-        cursor = conn.cursor()
-
-        cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?) """, (areceber, "Projeto Deletado", date.today()))
-        conn.commit()
-        conn.close()
-    
     def showProject(self):
         pop = ShowProject((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()), self)
         pop.show()
@@ -197,6 +232,11 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         """)
         rows_qnt = len(cursor.fetchall())
         self.tableWidget.setRowCount(rows_qnt)
+        cursor = conn.cursor()
+        cursor.execute("""
+        SELECT nomeCliente,  telefone,  tipodecliente 
+        FROM cliente;
+        """)
         tablerow = 0
         for row in cursor.fetchall():
             self.tableWidget.setItem(tablerow, 0, QtWidgets.QTableWidgetItem(row[0]))
@@ -222,27 +262,62 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
             self.tableWidget.setItem(tablerow,9,QtWidgets.QTableWidgetItem(str(row[6])))
             self.btn_delete = QtWidgets.QPushButton("Deletar", self)
             self.btn_update = QtWidgets.QPushButton("Alterar", self)
+            self.btn_addParcela = QtWidgets.QPushButton("Add. Parcela", self)
 
-            self.tableWidget.setCellWidget(tablerow,11,self.btn_delete)
-            self.tableWidget.setCellWidget(tablerow,10,self.btn_update)
+            self.tableWidget.setCellWidget(tablerow, 10,self.btn_addParcela)
+            self.tableWidget.setCellWidget(tablerow,12,self.btn_delete)
+            self.tableWidget.setCellWidget(tablerow,11,self.btn_update)
 
             self.btn_delete.clicked.connect(self.deleteData)
-            self.btn_update.clicked.connect(self.showProject)         
+            self.btn_update.clicked.connect(self.showProject) 
+            self.btn_addParcela.clicked.connect(self.payParcel)        
             
             
             tablerow+=1
 
         conn.close()
     
+    def payParcel(self):
+        id = ((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()))
+        paydialog, pressed = QtWidgets.QInputDialog.getDouble(self, "Abater Parcela", "Quantidade da Parcela:", 0, 0, 9999999999.99, 2 )
+        if pressed:
+            novo_recebido = paydialog
+
+            conn = sqlite3.connect('projeto.db')
+            cursor = conn.cursor()
+
+            cursor.execute(""" SELECT valorRecebido, valorTotal from projeto WHERE id = ? """, (id))
+            valorRecebido = cursor.fetchone()[0]
+            cursor.execute(""" SELECT valorRecebido, valorTotal from projeto WHERE id = ? """, (id))
+            valorTotal = cursor.fetchone()[1]
+            cursor.execute(""" SELECT valorAReceber from projeto WHERE id = ? """, (id))
+            valorAReceber = cursor.fetchone()[0]
+            
+            input_value = novo_recebido
+            novo_recebido = novo_recebido + valorRecebido
+            novo_areceber = valorTotal - novo_recebido
+            
+
+            cursor.execute(""" UPDATE projeto SET valorAReceber = ?, valorRecebido = ? WHERE id = ? """, (novo_areceber, novo_recebido, id))
+            conn.commit()
+            conn.close()
+
+            conn = sqlite3.connect('financeiro.db')
+            cursor = conn.cursor()
+
+            cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?)  """, ((-input_value), "Parcela abatida", datetime.datetime.now()))
+            conn.commit()
+            conn.close()
+        
 class ReadDebts(QtWidgets.QMainWindow):
     def toMenu(self):
-        stack.setCurrentIndex(0)
+        stack.setCurrentIndex(1)
 
     def loadDebts(self):
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
-        sql = """SELECT SUM(valorAReceber), SUM(valorDesenhista), SUM(valorImpostos), SUM(valorContabilidade), SUM(valorFuncionarios), SUM(valorPapelaria), SUM(valorFaxina),SUM(outrosGastos), SUM(valorAReceber) + SUM(valorDesenhista) + SUM(valorImpostos) + SUM(valorContabilidade) + SUM(valorFuncionarios) + SUM(valorPapelaria) + SUM(valorFaxina) + SUM(outrosGastos) FROM financeiro;"""
+        sql = """SELECT SUM(valorAReceber), SUM(valorDesenhista), SUM(valorImpostos), SUM(valorContabilidade), SUM(valorFuncionarios), SUM(valorPapelaria), SUM(valorFaxina),SUM(outrosGastos), SUM(valorAReceber)+ SUM(valorExtra) + SUM(valorDesenhista) + SUM(valorImpostos) + SUM(valorContabilidade) + SUM(valorFuncionarios) + SUM(valorPapelaria) + SUM(valorFaxina) + SUM(outrosGastos) FROM financeiro;"""
         cursor.execute(sql)
         
         row = cursor.fetchall()
@@ -284,13 +359,14 @@ class AdicionaGasto(QtWidgets.QDialog, FinanceiroController):
         self.btn_alterar.clicked.connect(self.insereGastos)
 
     def insereGastos(self):
-        self.dividaGeral(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"), self.val_desenhista.value(), self.val_impostos.value(),self.val_contabilidade.value(), self.val_funcionarios.value(), self.val_papelaria.value(), self.val_faxina.value(), self.val_outros.value(), self.entry_relatorio.toPlainText())
+        self.dividaGeral(datetime.datetime.now(), self.val_desenhista.value(), self.val_impostos.value(),self.val_contabilidade.value(), self.val_funcionarios.value(), self.val_papelaria.value(), self.val_faxina.value(), self.val_outros.value(), self.entry_relatorio.toPlainText(), -(self.val_comissao.value()))
         self.accept()
 
 class RelatorioFinanceiro(QtWidgets.QDialog):
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi("screens/relatorio_financeiro.ui", self)
+        
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
@@ -300,26 +376,39 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
-        
+        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.Stretch)
+        self.month.setDate(datetime.datetime.now().date())
+        self.year.setDate(datetime.datetime.now().date())
         
         self.tableWidget.setRowCount(50)
         self.btn_reload.clicked.connect(self.loadRelatorio)
         
     def loadRelatorio(self):
-        
+        mes = self.month.date().toString('MM')
+        ano = self.year.date().toString('yyyy')
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
         
-        cursor.execute("""SELECT * FROM financeiro;""")
+        cursor.execute("""SELECT * FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? ORDER BY data DESC;""", [ano,mes])
 
         rows_qnt = len(cursor.fetchall())
         self.tableWidget.setRowCount(rows_qnt)
 
         cursor = conn.cursor()
-        cursor.execute("""SELECT * FROM financeiro ORDER BY data DESC;""")
-
+        cursor.execute("""SELECT id,
+        strftime('%d/%m/%Y', data),
+        valorAReceber,
+        valorDesenhista,
+        valorImpostos,
+        valorContabilidade,
+        valorFuncionarios,
+        valorPapelaria,
+        valorFaxina,
+        outrosGastos,
+        detalhesGastos,
+        valorExtra FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? ORDER BY data DESC;""", [ano, mes])
         tableRow = 0
         for row in cursor.fetchall():
             self.tableWidget.setItem(tableRow, 0, QtWidgets.QTableWidgetItem(row[1]))
@@ -331,14 +420,15 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
             self.tableWidget.setItem(tableRow, 6, QtWidgets.QTableWidgetItem(str(row[7])))
             self.tableWidget.setItem(tableRow, 7, QtWidgets.QTableWidgetItem(str(row[8])))
             self.tableWidget.setItem(tableRow, 8, QtWidgets.QTableWidgetItem(str(row[9])))
-            self.tableWidget.setItem(tableRow, 9, QtWidgets.QTableWidgetItem(str(row[10])))
+            self.tableWidget.setItem(tableRow, 9, QtWidgets.QTableWidgetItem(str(row[11])))
+            self.tableWidget.setItem(tableRow, 10, QtWidgets.QTableWidgetItem(str(row[10])))
             tableRow += 1
         
 
         conn.close()
         
-        
 class ShowProject(QtWidgets.QDialog):
+        
     def __init__(self, id, parent):
         super().__init__(parent)
         uic.loadUi("screens/show_project.ui", self)
@@ -429,26 +519,30 @@ class ShowProject(QtWidgets.QDialog):
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
         sql = """ INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?)"""
-        cursor.execute(sql, (a_receber, "Atualização de Projeto", date.today()))
+        cursor.execute(sql, (a_receber, "Atualização de Projeto", datetime.datetime.now()))
         conn.commit()
         conn.close()
         self.accept()
         
 # main stack
 app = QtWidgets.QApplication([])
-app.setApplicationName("Controle Arquitetura Pereira")
+app.setApplicationName("Controle Financeiro Arquitetura Pereira")
 app.setWindowIcon(QtGui.QIcon('src/logo.jpeg'))
 stack = QtWidgets.QStackedWidget()
 # starting classes
+loginpage = LoginPage()
 mainmenu = MainMenu()
 insert_project = InsertProject()
 read_project = ReadProject()
 read_debts = ReadDebts()
 # adding to stack
+stack.addWidget(loginpage)
 stack.addWidget(mainmenu)
 stack.addWidget(insert_project)
 stack.addWidget(read_project)
 stack.addWidget(read_debts)
+
 # initializing project
 stack.showMaximized()
+
 app.exec()

@@ -72,13 +72,25 @@ class Novo:
                 valorPapelaria DOUBLE DEFAULT 0.00,
                 valorFaxina DOUBLE DEFAULT 0.00,
                 outrosGastos DOUBLE DEFAULT 0.00,                
-                detalhesGastos VARCHAR(4000)
-                                
+                detalhesGastos VARCHAR(4000),
+                valorExtra DOUBLE DEFAULT 0.00                
             );
             """)
 
         print('Tabela financeiro criada com sucesso.')
         # desconectando...
         conn.close()
+
+        conn = sqlite3.connect('usuario.db')
+        cursor = conn.cursor()
+
+        cursor.execute(""" 
+            CREATE TABLE IF NOT EXISTS usuario (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                password VARCHAR(40) NOT NULL
+            );
+            """)
+
+        print("Tabela usuario criada com suceso")
 
        
