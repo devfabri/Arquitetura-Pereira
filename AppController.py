@@ -172,11 +172,11 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(12, QtWidgets.QHeaderView.ResizeToContents)
-        self.tableWidget.setColumnHidden(9,True)
+        self.tableWidget.setColumnHidden(9,False)
         self.tableWidget.setRowCount(50)
         self.btn_voltar.clicked.connect(self.backToMenu)
         self.btn_reload.clicked.connect(self.loadData)
-        
+        self.loadData()
         #functions
         self.loadData()
         '''self.loadJobData()'''
@@ -213,7 +213,7 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
             # ATUALIZANDO FINANCEIRO
             conn = sqlite3.connect('financeiro.db')
             cursor = conn.cursor()
-            cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?) """, (areceber, "Projeto Deletado", datetime.datetime.now()))
+            cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data, idProjeto) VALUES (?,?,?,?) """, (areceber, "Projeto Deletado", datetime.datetime.now(), getId))
             conn.commit()
             conn.close()
         
@@ -250,7 +250,7 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         cursor = conn.cursor()
 
         # lendo dados do banco Projetos
-        cursor.execute("SELECT tipodeprojeto, dataContratacao, dataConclusao, valorRecebido, valorAReceber, valorTotal, id FROM projeto")
+        cursor.execute("""SELECT tipodeprojeto, strftime('%d/%m/%Y', dataContratacao), strftime('%d/%m/%Y', dataConclusao), printf("%.2f",valorRecebido), printf("%.2f",valorAReceber), printf("%.2f",valorTotal), id FROM projeto""")
         tablerow = 0
         for row in cursor.fetchall():
             self.tableWidget.setItem(tablerow, 3, QtWidgets.QTableWidgetItem(row[0]))
@@ -279,7 +279,16 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
     
     def payParcel(self):
         id = ((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()))
-        paydialog, pressed = QtWidgets.QInputDialog.getDouble(self, "Abater Parcela", "Quantidade da Parcela:", 0, 0, 9999999999.99, 2 )
+
+        conn = sqlite3.connect('projeto.db')
+        cursor = conn.cursor()
+        cursor.execute("""SELECT valorAReceber FROM projeto WHERE id = ?""", [id])
+        valor_restante = cursor.fetchone()[0]
+        conn.close()
+
+
+
+        paydialog, pressed = QtWidgets.QInputDialog.getDouble(self, "Abater Parcela", "Quantidade restante: R$"+ str(valor_restante) + "\nQuantidade da Parcela:", 0, 0, valor_restante, 2 )
         if pressed:
             novo_recebido = paydialog
 
@@ -305,20 +314,24 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
             conn = sqlite3.connect('financeiro.db')
             cursor = conn.cursor()
 
-            cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?)  """, ((-input_value), "Parcela abatida", datetime.datetime.now()))
+            cursor.execute(""" INSERT INTO financeiro (valorAReceber, detalhesGastos, data, idProjeto) VALUES (?,?,?, ?)  """, ((-input_value), "Parcela abatida", datetime.datetime.now(), id))
             conn.commit()
             conn.close()
+            self.loadData()
         
 class ReadDebts(QtWidgets.QMainWindow):
     def toMenu(self):
         stack.setCurrentIndex(1)
 
     def loadDebts(self):
+        mes = self.month.date().toString('MM')
+        ano = self.year.date().toString('yyyy')
+
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
-        sql = """SELECT SUM(valorAReceber), SUM(valorDesenhista), SUM(valorImpostos), SUM(valorContabilidade), SUM(valorFuncionarios), SUM(valorPapelaria), SUM(valorFaxina),SUM(outrosGastos), SUM(valorAReceber)+ SUM(valorExtra) + SUM(valorDesenhista) + SUM(valorImpostos) + SUM(valorContabilidade) + SUM(valorFuncionarios) + SUM(valorPapelaria) + SUM(valorFaxina) + SUM(outrosGastos) FROM financeiro;"""
-        cursor.execute(sql)
+        sql = """SELECT printf("%.2f",SUM(valorAReceber)), printf("%.2f",SUM(valorDesenhista)), printf("%.2f",SUM(valorImpostos)), printf("%.2f",SUM(valorContabilidade)), printf("%.2f",SUM(valorFuncionarios)), printf("%.2f",SUM(valorPapelaria)), printf("%.2f",SUM(valorFaxina)), printf("%.2f",SUM(outrosGastos)), printf("%.2f",SUM(valorAReceber)+ SUM(valorExtra) + SUM(valorDesenhista) + SUM(valorImpostos) + SUM(valorContabilidade) + SUM(valorFuncionarios) + SUM(valorPapelaria) + SUM(valorFaxina) + SUM(outrosGastos)) FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ?;"""
+        cursor.execute(sql, [ano, mes])
         
         row = cursor.fetchall()
         
@@ -338,6 +351,10 @@ class ReadDebts(QtWidgets.QMainWindow):
     def adicionarGasto(self):
         pop = AdicionaGasto(self)
         pop.show()
+        rsp = pop.exec_()
+
+        if rsp == QtWidgets.QDialog.Accepted:
+            self.loadDebts()
 
     def abrirRelatorio(self):
         pop = RelatorioFinanceiro(self)
@@ -346,20 +363,27 @@ class ReadDebts(QtWidgets.QMainWindow):
     def __init__(self):
         super(ReadDebts, self).__init__()
         uic.loadUi("screens/financeiro.ui", self)
-        self.loadDebts()
         self.btn_voltar.clicked.connect(self.toMenu)
         self.btn_reload.clicked.connect(self.loadDebts)
         self.btn_adicionar_gasto.clicked.connect(self.adicionarGasto)
         self.btn_relatorio.clicked.connect(self.abrirRelatorio)
+        self.month.setDate(datetime.datetime.now().date())
+        self.year.setDate(datetime.datetime.now().date())
+        self.loadDebts()
 
 class AdicionaGasto(QtWidgets.QDialog, FinanceiroController):
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi("screens/adicionar_gasto.ui", self)
         self.btn_alterar.clicked.connect(self.insereGastos)
+        self.visualisar.clicked.connect(self.watchProjects)
+
+    def watchProjects(self):
+        pop = ProjetosPopup(self)
+        pop.show()
 
     def insereGastos(self):
-        self.dividaGeral(datetime.datetime.now(), self.val_desenhista.value(), self.val_impostos.value(),self.val_contabilidade.value(), self.val_funcionarios.value(), self.val_papelaria.value(), self.val_faxina.value(), self.val_outros.value(), self.entry_relatorio.toPlainText(), -(self.val_comissao.value()))
+        self.dividaGeral(datetime.datetime.now(), self.val_desenhista.value(), self.val_impostos.value(),self.val_contabilidade.value(), self.val_funcionarios.value(), self.val_papelaria.value(), self.val_faxina.value(), self.val_outros.value(), self.entry_relatorio.toPlainText(), (-(self.val_comissao.value())), (self.id_projeto.text()))
         self.accept()
 
 class RelatorioFinanceiro(QtWidgets.QDialog):
@@ -377,38 +401,61 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.Stretch)
         self.month.setDate(datetime.datetime.now().date())
         self.year.setDate(datetime.datetime.now().date())
-        
-        self.tableWidget.setRowCount(50)
+        self.loadRelatorio()
         self.btn_reload.clicked.connect(self.loadRelatorio)
-        
+        self.visualisar.clicked.connect(self.openProjects)
+    
+    def openProjects(self):
+        pop = ProjetosPopup(self)
+        pop.show()
+
     def loadRelatorio(self):
+        id_projeto = self.id_projeto.text()
         mes = self.month.date().toString('MM')
         ano = self.year.date().toString('yyyy')
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
 
-        
-        cursor.execute("""SELECT * FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? ORDER BY data DESC;""", [ano,mes])
-
+        if id_projeto == '':
+            cursor.execute("""SELECT * FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? ORDER BY data DESC;""", [ano,mes])
+        else:
+            cursor.execute("""SELECT * FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? AND idProjeto = ? ORDER BY data DESC;""", [ano,mes, id_projeto])
         rows_qnt = len(cursor.fetchall())
         self.tableWidget.setRowCount(rows_qnt)
 
         cursor = conn.cursor()
-        cursor.execute("""SELECT id,
-        strftime('%d/%m/%Y', data),
-        valorAReceber,
-        valorDesenhista,
-        valorImpostos,
-        valorContabilidade,
-        valorFuncionarios,
-        valorPapelaria,
-        valorFaxina,
-        outrosGastos,
-        detalhesGastos,
-        valorExtra FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? ORDER BY data DESC;""", [ano, mes])
+        if id_projeto == '':
+            cursor.execute("""SELECT id,
+            strftime('%d/%m/%Y', data),
+            printf("%.2f",valorAReceber),
+            printf("%.2f",valorDesenhista),
+            printf("%.2f",valorImpostos),
+            printf("%.2f",valorContabilidade),
+            printf("%.2f",valorFuncionarios),
+            printf("%.2f",valorPapelaria),
+            printf("%.2f",valorFaxina),
+            printf("%.2f",outrosGastos),
+            detalhesGastos,
+            printf("%.2f",valorExtra),
+            idProjeto FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? ORDER BY data DESC;""", [ano, mes])
+        else:
+            cursor.execute("""SELECT id,
+            strftime('%d/%m/%Y', data),
+            printf("%.2f",valorAReceber),
+            printf("%.2f",valorDesenhista),
+            printf("%.2f",valorImpostos),
+            printf("%.2f",valorContabilidade),
+            printf("%.2f",valorFuncionarios),
+            printf("%.2f",valorPapelaria),
+            printf("%.2f",valorFaxina),
+            printf("%.2f",outrosGastos),
+            detalhesGastos,
+            printf("%.2f",valorExtra),
+            idProjeto FROM financeiro WHERE strftime('%Y', data) = ? AND strftime('%m', data) = ? AND idProjeto = ? ORDER BY data DESC;""", [ano, mes, id_projeto])
         tableRow = 0
         for row in cursor.fetchall():
             self.tableWidget.setItem(tableRow, 0, QtWidgets.QTableWidgetItem(row[1]))
@@ -421,7 +468,8 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
             self.tableWidget.setItem(tableRow, 7, QtWidgets.QTableWidgetItem(str(row[8])))
             self.tableWidget.setItem(tableRow, 8, QtWidgets.QTableWidgetItem(str(row[9])))
             self.tableWidget.setItem(tableRow, 9, QtWidgets.QTableWidgetItem(str(row[11])))
-            self.tableWidget.setItem(tableRow, 10, QtWidgets.QTableWidgetItem(str(row[10])))
+            self.tableWidget.setItem(tableRow, 11, QtWidgets.QTableWidgetItem(str(row[10])))
+            self.tableWidget.setItem(tableRow, 10, QtWidgets.QTableWidgetItem(str(row[12])))
             tableRow += 1
         
 
@@ -518,12 +566,85 @@ class ShowProject(QtWidgets.QDialog):
         
         conn = sqlite3.connect('financeiro.db')
         cursor = conn.cursor()
-        sql = """ INSERT INTO financeiro (valorAReceber, detalhesGastos, data) VALUES (?,?,?)"""
-        cursor.execute(sql, (a_receber, "Atualização de Projeto", datetime.datetime.now()))
+        sql = """ INSERT INTO financeiro (valorAReceber, detalhesGastos, data, idProjeto) VALUES (?,?,?,?)"""
+        cursor.execute(sql, (a_receber, "Atualização de Projeto", datetime.datetime.now(), id_cliente))
         conn.commit()
         conn.close()
         self.accept()
         
+class ProjetosPopup(QtWidgets.QMainWindow):
+    def __init__(self, parent):
+        super().__init__(parent)
+        uic.loadUi("screens/popread.ui", self) 
+        self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(12, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.setColumnHidden(9,False)
+        self.tableWidget.setColumnHidden(10,True)
+        self.tableWidget.setColumnHidden(11,True)
+        self.tableWidget.setColumnHidden(12,True)
+        self.tableWidget.setRowCount(50)
+        self.btn_reload.clicked.connect(self.loadData)
+        #functions
+        self.loadData()
+
+    def loadData(self):
+        conn = sqlite3.connect('cliente.db')
+        cursor = conn.cursor()
+
+        # lendo os dados
+        cursor.execute("""
+        SELECT nomeCliente,  telefone,  tipodecliente 
+        FROM cliente;
+        """)
+        rows_qnt = len(cursor.fetchall())
+        self.tableWidget.setRowCount(rows_qnt)
+        cursor = conn.cursor()
+        cursor.execute("""
+        SELECT nomeCliente,  telefone,  tipodecliente 
+        FROM cliente;
+        """)
+        tablerow = 0
+        for row in cursor.fetchall():
+            self.tableWidget.setItem(tablerow, 0, QtWidgets.QTableWidgetItem(row[0]))
+            self.tableWidget.setItem(tablerow, 1, QtWidgets.QTableWidgetItem(row[1]))
+            self.tableWidget.setItem(tablerow, 2, QtWidgets.QTableWidgetItem(row[2]))
+            tablerow+=1
+        
+        conn.close()
+
+        conn = sqlite3.connect('projeto.db')
+        cursor = conn.cursor()
+
+        # lendo dados do banco Projetos
+        cursor.execute("""SELECT tipodeprojeto, strftime('%d/%m/%Y', dataContratacao), strftime('%d/%m/%Y', dataConclusao), printf("%.2f",valorRecebido), printf("%.2f",valorAReceber), printf("%.2f",valorTotal), id FROM projeto""")
+        tablerow = 0
+        for row in cursor.fetchall():
+            self.tableWidget.setItem(tablerow, 3, QtWidgets.QTableWidgetItem(row[0]))
+            self.tableWidget.setItem(tablerow, 4, QtWidgets.QTableWidgetItem(row[1]))
+            self.tableWidget.setItem(tablerow, 5, QtWidgets.QTableWidgetItem(row[2]))
+            self.tableWidget.setItem(tablerow, 6, QtWidgets.QTableWidgetItem(str(row[3])))
+            self.tableWidget.setItem(tablerow, 7, QtWidgets.QTableWidgetItem(str(row[4])))
+            self.tableWidget.setItem(tablerow, 8, QtWidgets.QTableWidgetItem(str(row[5])))
+            self.tableWidget.setItem(tablerow,9,QtWidgets.QTableWidgetItem(str(row[6])))
+
+
+                   
+            
+            
+            tablerow+=1
+
+        conn.close()
 # main stack
 app = QtWidgets.QApplication([])
 app.setApplicationName("Controle Financeiro Arquitetura Pereira")

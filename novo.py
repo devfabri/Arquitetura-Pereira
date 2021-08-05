@@ -73,7 +73,8 @@ class Novo:
                 valorFaxina DOUBLE DEFAULT 0.00,
                 outrosGastos DOUBLE DEFAULT 0.00,                
                 detalhesGastos VARCHAR(4000),
-                valorExtra DOUBLE DEFAULT 0.00                
+                valorExtra DOUBLE DEFAULT 0.00,
+                idProjeto INTEGER DEFAULT 0                
             );
             """)
 
