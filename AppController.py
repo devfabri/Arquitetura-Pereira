@@ -48,6 +48,8 @@ class LoginPage(QtWidgets.QMainWindow):
         
         if passinput == self.password:
             stack.setCurrentIndex(1)
+        else:
+            self.senha.clear()
 
 class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
     def __init__(self):
@@ -375,6 +377,7 @@ class AdicionaGasto(QtWidgets.QDialog, FinanceiroController):
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi("screens/adicionar_gasto.ui", self)
+        self.setWindowTitle("Adicionar Gastos")
         self.btn_alterar.clicked.connect(self.insereGastos)
         self.visualisar.clicked.connect(self.watchProjects)
 
@@ -390,7 +393,7 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi("screens/relatorio_financeiro.ui", self)
-        
+        self.setWindowTitle("Relatório Financeiro")
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
@@ -480,6 +483,7 @@ class ShowProject(QtWidgets.QDialog):
     def __init__(self, id, parent):
         super().__init__(parent)
         uic.loadUi("screens/show_project.ui", self)
+        self.setWindowTitle("Visualização do Projeto: "+str(id))
         localid = id
         self.loadData(localid)   
         self.btn_alterar2.clicked.connect(lambda: self.atualizaProjeto(localid))
