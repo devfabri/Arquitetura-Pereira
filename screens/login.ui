@@ -75,7 +75,7 @@
       <property name="minimumSize">
        <size>
         <width>200</width>
-        <height>100</height>
+        <height>150</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -109,28 +109,76 @@ background-position: center;</string>
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QFrame" name="frame">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>20</height>
+           <height>25</height>
           </size>
          </property>
-         <property name="text">
-          <string>Insira sua senha</string>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="senha_incorreta">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string>Senha Incorreta</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="senha">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="inputMethodHints">
           <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
          </property>
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>
+         </property>
+         <property name="placeholderText">
+          <string>Insira sua Senha</string>
          </property>
         </widget>
        </item>
@@ -138,7 +186,7 @@ background-position: center;</string>
         <widget class="QPushButton" name="entrar">
          <property name="minimumSize">
           <size>
-           <width>75</width>
+           <width>200</width>
            <height>25</height>
           </size>
          </property>
@@ -176,7 +224,7 @@ QPushButton:pressed {
         <widget class="QPushButton" name="altera_senha">
          <property name="minimumSize">
           <size>
-           <width>75</width>
+           <width>200</width>
            <height>25</height>
           </size>
          </property>

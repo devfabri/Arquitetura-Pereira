@@ -728,9 +728,6 @@ QTextEdit:hover{
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Expanding</enum>
-            </property>
             <property name="sizeHint" stdset="0">
              <size>
               <width>40</width>
@@ -799,21 +796,15 @@ QTextEdit:hover{
               <height>30</height>
              </size>
             </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
             <property name="styleSheet">
-             <string notr="true">color: rgb(0, 0, 0);
+             <string notr="true">color: rgb(0,0,0);
 </string>
-            </property>
-            <property name="wrapping">
-             <bool>false</bool>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="minimumDateTime">
              <datetime>
@@ -860,6 +851,9 @@ QTextEdit:hover{
             </property>
             <property name="styleSheet">
              <string notr="true">color: rgb(0,0,0);r</string>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="minimumDateTime">
              <datetime>

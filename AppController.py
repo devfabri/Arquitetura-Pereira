@@ -3,7 +3,7 @@ import sqlite3
 import datetime
 from datetime import date
 from PyQt5 import QtGui, uic, QtWidgets
-from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtCore import QDate, QRegExp, Qt
 
 ## Import Database & Functions
 from novo import Novo
@@ -23,6 +23,7 @@ class LoginPage(QtWidgets.QMainWindow):
         self.getPassword()
         self.entrar.clicked.connect(self.validar)
         self.altera_senha.clicked.connect(self.changePassword)
+        self.senha_incorreta.setHidden(True)
 
     def getPassword(self):
         conn = sqlite3.connect('usuario.db')
@@ -43,13 +44,16 @@ class LoginPage(QtWidgets.QMainWindow):
             conn.commit()
             conn.close()
         self.getPassword()
+    
     def validar(self):
         passinput = self.senha.text()
+        self.senha.clear()
         
         if passinput == self.password:
+            self.senha_incorreta.setHidden(True)
             stack.setCurrentIndex(1)
         else:
-            self.senha.clear()
+            self.senha_incorreta.setHidden(False)
 
 class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
     def __init__(self):
@@ -60,9 +64,12 @@ class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
         self.btn_new.clicked.connect(self.toInsertScreen)
         self.btn_read.clicked.connect(self.toReadScreen)
         self.btn_financeiro.clicked.connect(self.toReadDebts)
+        self.bloquear.clicked.connect(self.block)
         
               
-        
+    def block(self):
+        stack.setCurrentIndex(0)
+
     def closeApp(self):
         app.quit()
         
@@ -76,6 +83,16 @@ class MainMenu(QtWidgets.QMainWindow, Novo_BD, Novo):
         stack.setCurrentIndex(4)
 
 class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
+    def __init__(self):
+        super(InsertProject, self).__init__()
+        uic.loadUi("screens/new_project.ui", self)
+        self.voltar.clicked.connect(self.toMenu)
+        self.inserirProjeto.clicked.connect(self.collectData)
+        self.data_contratacao.setDate(datetime.datetime.now().date())
+        self.data_finalizacao.setDate(datetime.datetime.now().date())
+        self.valor_obra.valueChanged.connect(self.resto_calculator)
+        self.valor_recebido.valueChanged.connect(self.resto_calculator)  
+        
     def toMenu(self):
         stack.setCurrentIndex(1)
 
@@ -139,19 +156,10 @@ class InsertProject(QtWidgets.QMainWindow, Novo_Projeto, Novo_CF):
             self.qnt_parcelas.clear()
             self.cpf.clear()
 
-    def __init__(self):
-        super(InsertProject, self).__init__()
-        uic.loadUi("screens/new_project.ui", self)
-        self.voltar.clicked.connect(self.toMenu)
-        self.inserirProjeto.clicked.connect(self.collectData)
-        
-        self.data_contratacao.setDate(datetime.datetime.now().date())
-        self.data_finalizacao.setDate(datetime.datetime.now().date())
-
-        self.valor_obra.valueChanged.connect(self.resto_calculator)
-        self.valor_recebido.valueChanged.connect(self.resto_calculator)  
-
     def resto_calculator(self):
+
+
+
         final = 0
         final = self.valor_obra.value() - self.valor_recebido.value()
         self.valor_areceber.setValue(final)
@@ -221,7 +229,8 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
         
     def showProject(self):
         pop = ShowProject((self.tableWidget.item(self.tableWidget.currentRow(), 9).text()), self)
-        pop.show()
+        pop.exec_()
+        self.loadData()
 
     def loadData(self):
         conn = sqlite3.connect('cliente.db')
@@ -265,6 +274,12 @@ class ReadProject(QtWidgets.QMainWindow, Ler_Projeto, Ler_CF):
             self.btn_delete = QtWidgets.QPushButton("Deletar", self)
             self.btn_update = QtWidgets.QPushButton("Alterar", self)
             self.btn_addParcela = QtWidgets.QPushButton("Add. Parcela", self)
+            self.btn_addParcela.setStyleSheet("QPushButton {\n	background-color: #ffffff;\n width:70px;	border: 1px solid black;\n	border-radius: 5px;\n}\n\nQPushButton:hover {\n	background-color: rgb(223, 223, 223);\n	border: 1px solid black;\n	border-radius: 5px;\n}\n\nQPushButton:pressed {\n	background-color: rgb(200, 200, 200);\n	border: 1px solid black;\n	border-radius: 5px;\n}")
+            self.btn_addParcela.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
+            self.btn_delete.setStyleSheet("QPushButton {\n	background-color: #ffffff;\n width:70px;	border: 1px solid black;\n	border-radius: 5px;\n}\n\nQPushButton:hover {\n	background-color: rgb(223, 223, 223);\n	border: 1px solid black;\n	border-radius: 5px;\n}\n\nQPushButton:pressed {\n	background-color: rgb(200, 200, 200);\n	border: 1px solid black;\n	border-radius: 5px;\n}")
+            self.btn_delete.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
+            self.btn_update.setStyleSheet("QPushButton {\n	background-color: #ffffff;\n width:70px;	border: 1px solid black;\n	border-radius: 5px;\n}\n\nQPushButton:hover {\n	background-color: rgb(223, 223, 223);\n	border: 1px solid black;\n	border-radius: 5px;\n}\n\nQPushButton:pressed {\n	background-color: rgb(200, 200, 200);\n	border: 1px solid black;\n	border-radius: 5px;\n}")
+            self.btn_update.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
 
             self.tableWidget.setCellWidget(tablerow, 10,self.btn_addParcela)
             self.tableWidget.setCellWidget(tablerow,12,self.btn_delete)
@@ -371,6 +386,8 @@ class ReadDebts(QtWidgets.QMainWindow):
         self.btn_relatorio.clicked.connect(self.abrirRelatorio)
         self.month.setDate(datetime.datetime.now().date())
         self.year.setDate(datetime.datetime.now().date())
+        self.month.dateChanged.connect(self.loadDebts)
+        self.year.dateChanged.connect(self.loadDebts)
         self.loadDebts()
 
 class AdicionaGasto(QtWidgets.QDialog, FinanceiroController):
@@ -380,6 +397,8 @@ class AdicionaGasto(QtWidgets.QDialog, FinanceiroController):
         self.setWindowTitle("Adicionar Gastos")
         self.btn_alterar.clicked.connect(self.insereGastos)
         self.visualisar.clicked.connect(self.watchProjects)
+        rx = QRegExp("\d+")
+        self.id_projeto.setValidator(QtGui.QRegExpValidator(rx))
 
     def watchProjects(self):
         pop = ProjetosPopup(self)
@@ -405,9 +424,18 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
         self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.verticalHeader().setMinimumSectionSize(35)
+        
+        
         self.month.setDate(datetime.datetime.now().date())
         self.year.setDate(datetime.datetime.now().date())
+        self.month.dateChanged.connect(self.loadRelatorio)
+        self.year.dateChanged.connect(self.loadRelatorio)
+        self.id_projeto.textChanged.connect(self.loadRelatorio)
+        rx = QRegExp("\d+")
+        self.id_projeto.setValidator(QtGui.QRegExpValidator(rx))
+
         self.loadRelatorio()
         self.btn_reload.clicked.connect(self.loadRelatorio)
         self.visualisar.clicked.connect(self.openProjects)
@@ -471,11 +499,11 @@ class RelatorioFinanceiro(QtWidgets.QDialog):
             self.tableWidget.setItem(tableRow, 7, QtWidgets.QTableWidgetItem(str(row[8])))
             self.tableWidget.setItem(tableRow, 8, QtWidgets.QTableWidgetItem(str(row[9])))
             self.tableWidget.setItem(tableRow, 9, QtWidgets.QTableWidgetItem(str(row[11])))
-            self.tableWidget.setItem(tableRow, 11, QtWidgets.QTableWidgetItem(str(row[10])))
             self.tableWidget.setItem(tableRow, 10, QtWidgets.QTableWidgetItem(str(row[12])))
-            tableRow += 1
-        
+            self.tableWidget.setItem(tableRow, 11, QtWidgets.QTableWidgetItem(str(row[10])))
+            self.tableWidget.resizeRowsToContents()
 
+            tableRow += 1
         conn.close()
         
 class ShowProject(QtWidgets.QDialog):
